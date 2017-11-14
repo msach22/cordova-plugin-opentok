@@ -1,6 +1,6 @@
 # Session Object
 
-The Session object returned by the `TB.initSession()` method provides access to much of the OpenTok functionality. The Session object exposes functionality through properties, methods and event handlers.
+The Session object returned by the `OT.initSession()` method provides access to much of the OpenTok functionality. The Session object exposes functionality through properties, methods and event handlers.
 
 ## Properties
 
@@ -8,12 +8,12 @@ The Session object returned by the `TB.initSession()` method provides access to 
 
 **connectionCount** (Integer) - The number of discrete clients connected to this session. 
 
-**sessionId** (String) - The session ID of this instance. (Note: a Session object is not connected to the TokBox server until you call the `connect()` method of the object and the object dispatches a connected event. See `TB.initSession()` and `connect()` ).
+**sessionId** (String) - The session ID of this instance. (Note: a Session object is not connected to the TokBox server until you call the `connect()` method of the object and the object dispatches a connected event. See `OT.initSession()` and `connect()` ).
 
 
 ## Methods
 
-[addEventListener()](#addEventListener)  
+[on()](#on)  
 [connect()](#connect)  
 [disconnect()](#disconnect)  
 [publish()](#publish)  
@@ -22,13 +22,13 @@ The Session object returned by the `TB.initSession()` method provides access to 
 [unsubscribe()](#unsubscribe)  
 
 
-<a name="addEventListener"></a>
-### addEventListener( type:String, listener:Function )
+<a name="on"></a>
+### on(type:String, listener:Function)
 
 Example Code:  
-```javascript
-session.addEventListener( 'streamCreated', function(streamEvent){
-  subscriber = session.subscribe( streamEvent.streams[0] );
+```
+session.on('streamCreated', (event) => {
+  subscriber = session.subscribe(event.stream);
 });
 ```
 
@@ -42,15 +42,15 @@ Registers a method as an event listener for a specific event. See [Session Event
 
 
 <a name="connect"></a>
-### connect( apiKey:String, token [, properties:Object] )
+### connect(apiKey:String, token, [properties:Object])
 
 Example Code:  
-```javascript
-session.connect( '1127', 'T1==aeoi3h3...' )
+```
+session.connect('1127', 'T1==aeoi3h3...' )
 ```
 
 Connects to an OpenTok session.  
-Upon a successful connection, the Session object dispatches a `sessionConnected` event. Call the `addEventListener()` method to set up an event listener to process this event before calling other methods of the Session object.
+Upon connecting successfully, the Session object dispatches a `sessionConnected` event. Call the `on()` method to set up an event listener to process this event before calling other methods of the Session object.
 
 The TB object dispatches an `exceptionEvent` if there is an error connecting to Session
 
@@ -58,7 +58,7 @@ The TB object dispatches an `exceptionEvent` if there is an error connecting to 
 
 **apikey** (String) - The API key that TokBox provided you when you registered for the OpenTok API.
 
-**token** (String) - The session token. You generate a session token using the OpenTok server-side libraries or the [OpenTok dashboard](https://dashboard.tokbox.com/projects)
+**token** (String) - The session token. You generate a session token using the OpenTok Server SDKs or the [OpenTok dashboard](https://dashboard.tokbox.com/projects)
 
 **properties** (Object) — Optional. There are currently no properties available for this function.
 
@@ -71,7 +71,7 @@ The TB object dispatches an `exceptionEvent` if there is an error connecting to 
 ### disconnect()
 
 Example Code:  
-```javascript
+```
 session.disconnect()
 ```
 
@@ -85,12 +85,12 @@ Calling the `disconnect()` method ends your connection with the session. In the 
 
 
 <a name="publish"></a>
-### publish( publisher:Publisher ):[Publisher](publisher.md)
+### publish(publisher:Publisher):[Publisher](publisher.md)
 
 Example Code:  
-```javascript
-var publisher = TB.initPublisher( '1127', 'publisherDiv' );
-session.publish( publisher );
+```
+var publisher = OT.initPublisher('1127', 'publisherDiv');
+session.publish(publisher);
 ```
 
 The `publish()` method starts publishing an audio-video stream to the session. Upon successful publishing, the Session objects on all connected web pages dispatch `streamCreated` events.
@@ -99,10 +99,10 @@ The TB object dispatches an exception event if the users role does not include p
 
 #### Parameters
 
-**publisher** ([Publisher](publisher.md)) - You pass a Publisher object as the one parameter of the method. You can initialize a Publisher object by calling the `TB.initPublisher()` method. Before calling `session.publish()`, you can use the Publisher object to set up and test the microphone and camera used by the Publisher.
+**publisher** ([Publisher](publisher.md)) - You pass a Publisher object as the one parameter of the method. You can initialize a Publisher object by calling the `OT.initPublisher()` method. Before calling `session.publish()`, you can use the Publisher object to set up and test the microphone and camera used by the Publisher.
 
 #### Events Dispatched
-**streamCreated** ( [StreamEvent](streamEvents.md) ) — The stream has been published. The Session object dispatches this on all clients subscribed to the stream, as well as on the publishers client.
+**streamCreated** ([StreamEvent](streamEvents.md)) — The stream has been published. The Session object dispatches this on all clients subscribed to the stream, as well as on the publishers client.
 
 
 
@@ -110,15 +110,15 @@ The TB object dispatches an exception event if the users role does not include p
 ### subscribe(stream:Stream, [replaceElementId:String, properties:Object]):Subscriber
 
 Example Code:  
-```javascript
-var subscriber = session.subscribe( stream, 'streamDiv' );
+```
+var subscriber = session.subscribe(event.stream, 'streamDiv');
 ```
 
 Subscribes to a stream that is available to the session. As other publishers connect to the session, the Session object dispatches a streamCreated event. This event object has a streams property, which is an updated array of the Stream objects corresponding to streams connected to the session.
 
 #### Parameters
 
-**stream** ( [Stream](stream.md) ) — Stream object representing the stream to which we are trying to subscribe.
+**stream** ([Stream](stream.md)) — Stream object representing the stream to which we are trying to subscribe.
 
 **replaceElementId** (String) — String ID of the existing DOM element that the Subscriber replaces. If you do not specify a replaceElementId, the application appends a new DOM element to the HTML body.
 
@@ -136,36 +136,36 @@ Subscribes to a stream that is available to the session. As other publishers con
 
 
 <a name="unpublish"></a>
-### unpublish( publisher:Publisher )
+### unpublish(publisher:Publisher)
 
 Example Code:  
-```javascript
-session.unpublish( publisher );
+```
+session.unpublish(publisher);
 ```
 
 The `unpublish()` method ceases publishing the specified publishers audio-video stream to the session.
 Upon successful termination, the Session object on every connected web page dispatches a streamDestroyed event.
 
 #### Parameters
-**publisher** ( [Publisher](publisher.md) ) — The Publisher object to stop streaming.
+**publisher** ([Publisher](publisher.md)) — The Publisher object to stop streaming.
 
 #### Events Dispatched
-**streamDestroyed** ( [StreamEvent](streamEvents.md) ) — The stream associated with the Publisher has been destroyed. Dispatched on the Publishers device and on device for all connections subscribing to the publishers stream.
+**streamDestroyed** ([StreamEvent](streamEvents.md)) — The stream associated with the Publisher has been destroyed. Dispatched on the Publishers device and on device for all connections subscribing to the publishers stream.
 
 
 <a name="unsubscribe"></a>
-### unsubscribe( subscriber:Subscriber )
+### unsubscribe(subscriber:Subscriber)
 
 Example Code:  
-```javascript
-session.unsubscribe( subscriber );
+```
+session.unsubscribe(subscriber);
 ```
 
 Stops subscribing to a stream in the session. The display of the audio-video stream is removed
 
 #### Parameters
 
-**subscriber** ( [Subscriber](subscriber.md) ) — The Subscriber object to unsubcribe.
+**subscriber** ([Subscriber](subscriber.md)) — The Subscriber object to unsubscribe.
 
 
 <a name="events"></a>
@@ -197,4 +197,3 @@ Stops subscribing to a stream in the session. The display of the audio-video str
 		<td>Triggered when stream has ended in a session</td>
 	</tr>
 </table>
-

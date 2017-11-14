@@ -15,7 +15,7 @@ TB Object lets you initialize the OpenTok API and set up exception event handlin
 ### TB.addEventListener(type:String, listener:Function)
 
 Example Code:  
-```javascript
+```
 TB.addEventListener( 'exception', function(e){
   console.log( e.message );
 });
@@ -35,7 +35,7 @@ Registers a method as an event listener for a specific event. The TB class dispa
 ### TB.initPublisher( apiKey:String [, replaceElementId:String] [, properties:Object] ):Publisher
 
 Example Code:  
-```javascript
+```
 var publisher = TB.initPublisher( '1127', 'myPublisherDiv', {name:"HelloWorld"} );
 ```
 
@@ -69,12 +69,12 @@ Valid Inputs: 'Front' or 'Back'
 ### TB.initSession( sessionId:String ):Session
 
 Example Code:  
-```javascript
+```
 var session = TB.initSession( "1_mx..." )
 ```
 
 Initializes and returns the local session object for a specified session ID.  
-You connect to the session using the `connect()` method of the Session object returned by the `TB.initSession()` method. `TB.initSession()` does not initiate communications with the cloud, it simply initializes the Session object that you can use to connect (and to perform other operations once connected).
+You connect to the session using the `connect()` method of the Session object returned by the `OT.initSession()` method. `OT.initSession()` does not initiate communications with the cloud, it simply initializes the Session object that you can use to connect (and to perform other operations once connected).
 
 #### Parameters
 
@@ -89,7 +89,7 @@ You connect to the session using the `connect()` method of the Session object re
 ### TB.removeEventListener( type:String, listener:Function )  
 
 Example Code:  
-```javascript
+```
 TB.addEventListener( 'exception', eventHandlerFunction );
 ```
 
@@ -101,5 +101,3 @@ Removes an event listener for a specific event
 
 **listener** (Function) — The event listener function to remove.  
 The TB object throws an exception if the listener name is invalid.  
-
-

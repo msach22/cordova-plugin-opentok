@@ -1,6 +1,6 @@
 # Publisher Object
 
-The Publisher object provides information about the publishing stream. Calling the TB.initPublisher() method creates a Publisher object.
+The Publisher object provides information about the publishing stream. Calling the `OT.initPublisher()` method creates a Publisher object.
 
 ## Properties
 
