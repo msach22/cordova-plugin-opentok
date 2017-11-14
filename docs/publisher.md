@@ -4,10 +4,10 @@ The Publisher object provides information about the publishing stream. Calling t
 
 ## Properties
 
-**id** (String) — The ID of the DOM element through which the Publisher stream is displayed
+* **id** (String) — The ID of the DOM element through which the Publisher stream is displayed
 
-**session** (Session) — The Session to which the Publisher is publishing a stream. If the Publisher is not publishing a stream to a Session, this property is set to null.
+* **session** (Session) — The Session to which the Publisher is publishing a stream. If the Publisher is not publishing a stream to a Session, this property is set to null.
 
-**replaceElementId** (String) — The ID of the DOM element that was replaced when the Publisher video stream was inserted.
+* **replaceElementId** (String) — The ID of the DOM element that was replaced when the Publisher video stream was inserted.
 
 *Note*: Publisher properties should only be used as read-only entities.

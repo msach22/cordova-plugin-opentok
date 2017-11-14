@@ -4,11 +4,11 @@ The Session object returned by the `OT.initSession()` method provides access to 
 
 ## Properties
 
-**connection** ([Connection](connection.md)) - The Connection Object for this session. The connection property is only available once the `sessionConnected` event has been triggered. If the session fails to connect, this property shall remain nil.
+* **connection** ([Connection](connection.md)) - The Connection Object for this session. The connection property is only available once the `sessionConnected` event has been triggered. If the session fails to connect, this property shall remain nil.
 
-**connectionCount** (Integer) - The number of discrete clients connected to this session. 
+* **connectionCount** (Integer) - The number of discrete clients connected to this session. 
 
-**sessionId** (String) - The session ID of this instance. (Note: a Session object is not connected to the TokBox server until you call the `connect()` method of the object and the object dispatches a connected event. See `OT.initSession()` and `connect()` ).
+* **sessionId** (String) - The session ID of this instance. (Note: a Session object is not connected to the TokBox server until you call the `connect()` method of the object and the object dispatches a connected event. See `OT.initSession()` and `connect()` ).
 
 
 ## Methods
@@ -25,6 +25,14 @@ The Session object returned by the `OT.initSession()` method provides access to 
 <a name="on"></a>
 ### on(type:String, listener:Function)
 
+Registers a method as an event listener for a specific event. See [Session Events](sessionEvents.md).
+
+#### Parameters
+
+* **type** (String) — This string identifying the type of event. 
+
+* **listener** (Function) - The function to be invoked when the Session object dispatches the event. 
+
 Example Code:  
 ```
 session.on('streamCreated', (event) => {
@@ -32,22 +40,9 @@ session.on('streamCreated', (event) => {
 });
 ```
 
-Registers a method as an event listener for a specific event. See [Session Events](sessionEvents.md).
-
-#### Parameters
-
-**type** (String) — This string identifying the type of event. 
-
-**listener** (Function) - The function to be invoked when the Session object dispatches the event. 
-
 
 <a name="connect"></a>
-### connect(apiKey:String, token, [properties:Object])
-
-Example Code:  
-```
-session.connect('1127', 'T1==aeoi3h3...' )
-```
+### connect(token:String, completionHandler:Function)
 
 Connects to an OpenTok session.  
 Upon connecting successfully, the Session object dispatches a `sessionConnected` event. Call the `on()` method to set up an event listener to process this event before calling other methods of the Session object.
@@ -56,117 +51,115 @@ The TB object dispatches an `exceptionEvent` if there is an error connecting to 
 
 #### Parameters
 
-**apikey** (String) - The API key that TokBox provided you when you registered for the OpenTok API.
+* **token** (String) - The session token. You generate a session token using the OpenTok Server SDKs or the [OpenTok dashboard](https://dashboard.tokbox.com/projects)
 
-**token** (String) - The session token. You generate a session token using the OpenTok Server SDKs or the [OpenTok dashboard](https://dashboard.tokbox.com/projects)
-
-**properties** (Object) — Optional. There are currently no properties available for this function.
+* **completionHandler** (Function) — Optional. A function to be called when the call to the `connect()` method succeeds or fails. 
 
 #### Events Dispatched
 
-**sessionConnected** (SessionConnectEvent) — Dispatched locally when the connection is established.  
+* **sessionConnected** (SessionConnectEvent) — Dispatched locally when the connection is established.  
+
+Example Code:  
+```
+session.connect('1127', 'T1==aeoi3h3...' )
+```
 
 
 <a name="disconnect"></a>
 ### disconnect()
+
+Calling the `disconnect()` method ends your connection with the session. In the course of terminating your connection, it also ceases publishing any stream(s) you were publishing.
+
+#### Events dispatched
+
+* **sessionDisconnected** ([SessionDisconnectEvent](sessionEvents.md)) — Dispatched locally when the connection is disconnected.
+
+* **streamDestroyed** ([StreamEvent](streamEvents.md)) — Dispatched if streams are lost as a result of the session disconnecting.
+
 
 Example Code:  
 ```
 session.disconnect()
 ```
 
-Calling the `disconnect()` method ends your connection with the session. In the course of terminating your connection, it also ceases publishing any stream(s) you were publishing.
-
-#### Events dispatched
-
-**sessionDisconnected** ([SessionDisconnectEvent](sessionEvents.md)) — Dispatched locally when the connection is disconnected.
-
-**streamDestroyed** ([StreamEvent](streamEvents.md)) — Dispatched if streams are lost as a result of the session disconnecting.
-
-
 <a name="publish"></a>
 ### publish(publisher:Publisher):[Publisher](publisher.md)
 
+The `publish()` method starts publishing an audio-video stream to the session. Upon successful publishing, the Session objects on all connected web pages dispatch `streamCreated` events.
+
+#### Parameters
+
+* **publisher** ([Publisher](publisher.md)) - You pass a Publisher object as the one parameter of the method. You can initialize a Publisher object by calling the `OT.initPublisher()` method. Before calling `session.publish()`, you can use the Publisher object to set up and test the microphone and camera used by the Publisher.
+
+#### Events Dispatched
+
+* **streamCreated** ([StreamEvent](streamEvents.md)) — The stream has been published. The Session object dispatches this on all clients subscribed to the stream, as well as on the publishers client.
+
+The TB object dispatches an exception event if the users role does not include permissions required to publish. For example, if the users role is set to subscriber, then they cannot publish. You define a users role when you create the user token in your server.
+
 Example Code:  
+
 ```
 var publisher = OT.initPublisher('1127', 'publisherDiv');
 session.publish(publisher);
 ```
 
-The `publish()` method starts publishing an audio-video stream to the session. Upon successful publishing, the Session objects on all connected web pages dispatch `streamCreated` events.
+<a name="subscribe"></a>
+### subscribe(stream:Stream, [replaceElementId:String, properties:Object]):Subscriber
 
-The TB object dispatches an exception event if the users role does not include permissions required to publish. For example, if the users role is set to subscriber, then they cannot publish. You define a users role when you create the user token in your server.
+Subscribes to a stream that is available to the session. As other publishers connect to the session, the Session object dispatches a streamCreated event. This event object has a streams property, which is an updated array of the Stream objects corresponding to streams connected to the session.
+
+#### Return
+
+**Subscriber** — The Subscriber object for this stream. Stream control functions are exposed through the Subscriber object
 
 #### Parameters
 
-**publisher** ([Publisher](publisher.md)) - You pass a Publisher object as the one parameter of the method. You can initialize a Publisher object by calling the `OT.initPublisher()` method. Before calling `session.publish()`, you can use the Publisher object to set up and test the microphone and camera used by the Publisher.
+* **stream** ([Stream](stream.md)) — Stream object representing the stream to which we are trying to subscribe.
 
-#### Events Dispatched
-**streamCreated** ([StreamEvent](streamEvents.md)) — The stream has been published. The Session object dispatches this on all clients subscribed to the stream, as well as on the publishers client.
+* **replaceElementId** (String) — String ID of the existing DOM element that the Subscriber replaces. If you do not specify a replaceElementId, the application appends a new DOM element to the HTML body.
 
-
-
-<a name="subscribe"></a>
-### subscribe(stream:Stream, [replaceElementId:String, properties:Object]):Subscriber
+* **properties** (Object) - Optional. This is an optional object that contains the following properties:
+  * **height** (Number) — The desired height, in pixels, of the displayed Subscriber video stream (default: 198)
+  * **width** (Number) — The desired width, in pixels, of the displayed Subscriber video stream (default: 264)
+  * **subscribeToAudio** (Boolean) — Whether to initially subscribe to audio (if available) for the stream (default: true)
+  * **subscribeToVideo** (Boolean) — Whether to initially subscribe to video (if available) for the stream (default: true)
 
 Example Code:  
 ```
 var subscriber = session.subscribe(event.stream, 'streamDiv');
 ```
 
-Subscribes to a stream that is available to the session. As other publishers connect to the session, the Session object dispatches a streamCreated event. This event object has a streams property, which is an updated array of the Stream objects corresponding to streams connected to the session.
-
-#### Parameters
-
-**stream** ([Stream](stream.md)) — Stream object representing the stream to which we are trying to subscribe.
-
-**replaceElementId** (String) — String ID of the existing DOM element that the Subscriber replaces. If you do not specify a replaceElementId, the application appends a new DOM element to the HTML body.
-
-**properties** (Object) - Optional. This is an optional object that contains the following properties:
-
-* **height** (Number) — The desired height, in pixels, of the displayed Subscriber video stream (default: 198)
-* **width** (Number) — The desired width, in pixels, of the displayed Subscriber video stream (default: 264)
-* **subscribeToAudio** (Boolean) — Whether to initially subscribe to audio (if available) for the stream (default: true)
-* **subscribeToVideo** (Boolean) — Whether to initially subscribe to video (if available) for the stream (default: true)
-
-#### Return
-
-**Subscriber** — The Subscriber object for this stream. Stream control functions are exposed through the Subscriber object
-
-
-
 <a name="unpublish"></a>
 ### unpublish(publisher:Publisher)
+
+The `unpublish()` method ceases publishing the specified publishers audio-video stream to the session.
+Upon successful termination, the Session object on every connected web page dispatches a streamDestroyed event.
+
+#### Parameters
+* **publisher** ([Publisher](publisher.md)) — The Publisher object to stop streaming.
+
+#### Events Dispatched
+* **streamDestroyed** ([StreamEvent](streamEvents.md)) — The stream associated with the Publisher has been destroyed. Dispatched on the Publishers device and on device for all connections subscribing to the publishers stream.
 
 Example Code:  
 ```
 session.unpublish(publisher);
 ```
 
-The `unpublish()` method ceases publishing the specified publishers audio-video stream to the session.
-Upon successful termination, the Session object on every connected web page dispatches a streamDestroyed event.
-
-#### Parameters
-**publisher** ([Publisher](publisher.md)) — The Publisher object to stop streaming.
-
-#### Events Dispatched
-**streamDestroyed** ([StreamEvent](streamEvents.md)) — The stream associated with the Publisher has been destroyed. Dispatched on the Publishers device and on device for all connections subscribing to the publishers stream.
-
-
 <a name="unsubscribe"></a>
 ### unsubscribe(subscriber:Subscriber)
-
-Example Code:  
-```
-session.unsubscribe(subscriber);
-```
 
 Stops subscribing to a stream in the session. The display of the audio-video stream is removed
 
 #### Parameters
 
-**subscriber** ([Subscriber](subscriber.md)) — The Subscriber object to unsubscribe.
+* **subscriber** ([Subscriber](subscriber.md)) — The Subscriber object to unsubscribe.
 
+Example Code:  
+```
+session.unsubscribe(subscriber);
+```
 
 <a name="events"></a>
 ## Session Events:

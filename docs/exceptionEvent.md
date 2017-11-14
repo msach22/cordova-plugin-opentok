@@ -4,6 +4,6 @@ The TB object dispatches an exception event when the OpenTok API encounters an e
 
 ## Properties
 
-**code** (Number) — The error code.
+* **code** (Number) — The error code.
 
-**message** (String) — The error message. Check the message property for more details about the error.
+* **message** (String) — The error message. Check the message property for more details about the error.

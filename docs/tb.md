@@ -14,6 +14,15 @@ TB Object lets you initialize the OpenTok API and set up exception event handlin
 <a name="addEventListener"></a>
 ### TB.addEventListener(type:String, listener:Function)
 
+Registers a method as an event listener for a specific event. The TB class dispatches exception events, defined by the
+[ExceptionEvent](exceptionEvent.md) object.
+
+#### Parameters
+
+* **type** (String) — This string identifying the type of event. The TB object can only dispatch one type of event: an exception event. The only type of event the TB object dispatches is an 'exception' event.
+
+* **listener** (Function) — The function to be invoked when the TB object dispatches the event. An [ExceptionEvent](exceptionEvent.md) object is passed into this function.
+
 Example Code:  
 ```
 TB.addEventListener('exception', function(e){
@@ -21,23 +30,8 @@ TB.addEventListener('exception', function(e){
 });
 ```
 
-Registers a method as an event listener for a specific event. The TB class dispatches exception events, defined by the
-[ExceptionEvent](exceptionEvent.md) object.
-
-#### Parameters
-
-**type** (String) — This string identifying the type of event. The TB object can only dispatch one type of event: an exception event. The only type of event the TB object dispatches is an 'exception' event.
-
-**listener** (Function) — The function to be invoked when the TB object dispatches the event. An [ExceptionEvent](exceptionEvent.md) object is passed into this function.
-
-
 <a name="initPublisher"></a>
 ### OT.initPublisher apiKey:String, [replaceElementId:String], [properties:Object]):Publisher
-
-Example Code:  
-```
-var publisher = OT.initPublisher('1127', 'myPublisherDiv', {name:"HelloWorld"} );
-```
 
 Initializes and returns a Publisher object. You can use this Publisher object to test the microphone and camera attached to the Publisher, and then pass this Publisher object to Session.publish() to publish a stream to a session.
 
@@ -45,59 +39,68 @@ You can only create one publisher object. Calling TB.initPublisher() more than o
 
 #### Parameters
 
-**apikey** (String) — The API key that TokBox provided you when you registered for the OpenTok API.
+* **apikey** (String) — The API key that TokBox provided you when you registered for the OpenTok API.
 
-**replaceElementId** (String) - Optional. The id attribute of the existing DOM element that the Publisher video replaces. If you do not specify a replaceElementId, the application appends a new DOM element to the HTML body. 
+* **replaceElementId** (String) - Optional. The id attribute of the existing DOM element that the Publisher video replaces. If you do not specify a replaceElementId, the application appends a new DOM element to the HTML body. 
 
-**properties** (Object) — Optional. This is an optional object that contains the following properties (each of which are optional):
+* **properties** (Object) — Optional. This is an optional object that contains the following properties (each of which are optional):
 
-* **cameraName** (String) - The preferred camera position. When setting this property, if the change is possible, the publisher will use the camera with the specified position.  
-Valid Inputs: 'Front' or 'Back'
-* **height** (Number) — The desired height, in pixels, of the displayed Publisher video stream (default: 198). 
-* **width** (Number) — The desired width, in pixels, of the displayed Publisher video stream (default: 264). 
-* **name** (String) — A string that will be associated with this publisher’s stream. This string is displayed at the bottom of publisher videos and at the bottom of subscriber videos associated with the published stream. If you do not specify a value, the name is set to the device name.
-* **publishAudio** (Boolean) — Whether to publish audio.
-* **publishVideo** (Boolean) — Whether to publish video.
+  * **cameraName** (String) - The preferred camera position. When setting this property, if the change is possible, the publisher will use the camera with the specified position. Valid Inputs: 'Front' or 'Back'
+
+  * **height** (Number) — The desired height, in pixels, of the displayed Publisher video stream (default: 198). 
+
+  * **width** (Number) — The desired width, in pixels, of the displayed Publisher video stream (default: 264). 
+
+  * **name** (String) — A string that will be associated with this publisher’s stream. This string is displayed at the bottom of publisher videos and at the bottom of subscriber videos associated with the published stream. If you do not specify a value, the name is set to the device name.
+
+  * **publishAudio** (Boolean) — Whether to publish audio.
+
+  * **publishVideo** (Boolean) — Whether to publish video.
 
 
-#### Return
+#### Returns
 
-**Publisher** ([Publisher](publisher.md)) — A Publisher object.
+* **Publisher** ([Publisher](publisher.md)) — A Publisher object.
 
-
-<a name="initSession"></a>
-### OT.initSession(apiKey:String, sessionId:String):Session
 
 Example Code:  
 ```
-var session = OT.initSession('1127', '1_mx...' )
+var publisher = OT.initPublisher('1127', 'myPublisherDiv', {name:"HelloWorld"} );
 ```
+
+<a name="initSession"></a>
+### OT.initSession(apiKey:String, sessionId:String):Session
 
 Initializes and returns the local session object for a specified session ID.  
 You connect to the session using the `connect()` method of the Session object returned by the `OT.initSession()` method. `OT.initSession()` does not initiate communications with the cloud, it simply initializes the Session object that you can use to connect (and to perform other operations once connected).
 
 #### Parameters
 
-**sessionId** (String) — Use the [Session ID](https://tokbox.com/developer/guides/basics/#sessions) generated by your server that represents the session to which you are planning to connect.  
+* **sessionId** (String) — Use the [Session ID](https://tokbox.com/developer/guides/basics/#sessions) generated by your server that represents the session to which you are planning to connect.  
 
 #### Returns
 
-**Session** ([Session](session.md)) - The session object through which all further interactions with the session will occur.
+* **Session** ([Session](session.md)) - The session object through which all further interactions with the session will occur.
+
+Example Code:  
+```
+var session = OT.initSession('1127', '1_mx...' )
+```
 
 
 <a name="removeEventListener"></a>
 ### TB.removeEventListener(type:String, listener:Function)  
 
-Example Code:  
-```
-TB.removeEventListener('exception', eventHandlerFunction);
-```
-
 Removes an event listener for a specific event  
 
 #### Parameters
 
-**type** (String) — This string identifying the type of event. The TB object can only dispatch one type of event: an exception event. The only type of event the TB object dispatches is an 'exception' event.
+* **type** (String) — This string identifying the type of event. The TB object can only dispatch one type of event: an exception event. The only type of event the TB object dispatches is an 'exception' event.
 
-**listener** (Function) — The event listener function to remove.  
+* **listener** (Function) — The event listener function to remove.  
 The TB object throws an exception if the listener name is invalid.  
+
+Example Code:  
+```
+TB.removeEventListener('exception', eventHandlerFunction);
+```

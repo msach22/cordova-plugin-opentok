@@ -4,11 +4,11 @@ The Session object dispatches SessionConnectEvent object when a session has succ
 
 ## Properties
 
-**connections** (Array[Connection]) — An array of [Connection](connection.md) objects, representing connections to the session. (Note that each connection can publish multiple streams)
+* **connections** (Array[Connection]) — An array of [Connection](connection.md) objects, representing connections to the session. (Note that each connection can publish multiple streams)
 
-**streams** (Array[Stream]) —  An array of [Stream](stream.md) objects corresponding to the streams currently available in the session that has connected.
+* **streams** (Array[Stream]) —  An array of [Stream](stream.md) objects corresponding to the streams currently available in the session that has connected.
 
-**target** (Object) - The object that dispatched the event
+* **target** (Object) - The object that dispatched the event
 
 
 # SessionDisconnectEvent
@@ -17,4 +17,4 @@ The Session object dispatches SessionDisconnectEvent object when a session has d
 
 ## Properties
 
-**target** (Object) - The object that dispatched the event
+* **target** (Object) - The object that dispatched the event
