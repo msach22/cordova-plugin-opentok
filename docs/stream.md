@@ -13,8 +13,8 @@ When a stream is added to a session, the Session object dispatches a streamCreat
 
 **name** (String) — The name of the stream. Specify a name when you call TB.initPublisher().
 
-**hasAudio** (Boolean) — Whether the stream has audio published, which you specify when you call OT.initPublisher().
+**hasAudio** (Boolean) — Whether the stream has audio published, which you specify when you call `OT.initPublisher()`.
 
-**hasVideo** (Boolean) — Whether the stream has video published, which you specify when you call OT.initPublisher().
+**hasVideo** (Boolean) — Whether the stream has video published, which you specify when you call `OT.initPublisher()`.
 
 **streamId** (String) - The ID of the stream.

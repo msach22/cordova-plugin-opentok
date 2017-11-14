@@ -2,7 +2,7 @@
 
 The OpenTok API lets you add live video to your app. [Find out more online](http://www.tokbox.com/platform).
 
-For an overview of the core concepts of OpenTok, please visit our [OpenTok Developer Page](http://www.tokbox.com/opentok/demo)
+For an overview of the core concepts of OpenTok, please visit our [OpenTok Developer Page](https://tokbox.com/developer/)
 
 ### This OpenTok Plugin Library is a subset of the OpenTok JavaScript Library
 
@@ -96,4 +96,6 @@ To use the OpenTok PhoneGap plugin, include the OpenTok JavaScript file in your 
 
 Since the video View is a native UIView on top of the phoneGap's web view, moving the 'object' DOM will have no effect on the video. To update Video position, call this function:
 
-    OT.updateViews()
+```
+OT.updateViews()
+```

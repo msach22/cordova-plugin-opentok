@@ -10,4 +10,4 @@ To initialize a session, call the `OT.initSession()` method, which returns the S
 
 **connectionId** (String) — The ID of this connection.
 
-**creationTime** (Number) — The timestamp for the creation of the connection. This value is calculated in milliseconds. You can convert this value to a Date object by calling new Date(creationTime), where creationTime is the creationTime property of the Connection object.
+**creationTime** (Number) — The timestamp for the creation of the connection. This value is calculated in milliseconds. You can convert this value to a Date object by calling `new Date(creationTime)`, where creationTime is the creationTime property of the Connection object.
