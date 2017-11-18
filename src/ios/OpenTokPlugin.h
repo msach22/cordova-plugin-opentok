@@ -1,5 +1,5 @@
 //
-//  OpentokPlugin.h
+//  OpenTokPlugin.h
 //
 //  Copyright (c) 2012 TokBox. All rights reserved.
 //  Please see the LICENSE included with this distribution for details.

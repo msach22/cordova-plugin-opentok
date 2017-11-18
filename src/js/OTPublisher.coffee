@@ -25,16 +25,33 @@ class TBPublisher
     cameraName = "front"
     zIndex = TBGetZIndex(document.getElementById(@domId))
     ratios = TBGetScreenRatios()
-
+    audioFallbackEnabled = "true"
+    audioBitrate = 40000
+    audioSource = "true"
+    videoSource = "true"
+    frameRate = 30
+    resolution = "640X480"
     if @properties?
       width = @properties.width ? position.width
       height = @properties.height ? position.height
       name = @properties.name ? ""
       cameraName = @properties.cameraName ? "front"
+      audioFallbackEnabled = @properties.audioFallbackEnabled ? audioFallbackEnabled
+      audioBitrate = @properties.audioBitrate ? audioBitrate
+      audioSource = @properties.audioSource ? audioSource
+      videoSource = @properties.videoSource ? videoSource
+      frameRate = @properties.frameRate ? frameRate
+      resolution = @properties.resolution ? resolution
       if(@properties.publishAudio? and @properties.publishAudio==false)
         publishAudio="false"
       if(@properties.publishVideo? and @properties.publishVideo==false)
         publishVideo="false"
+      if(@properties.audioFallbackEnabled? and @properties.audioFallbackEnabled==false)
+        audioFallbackEnabled="false"
+      if(@properties.audioSource? || @properties.audioSource==false)
+        audioSource="false"
+      if(@properties.videoSource? || @properties.videoSource==false)
+        videoSource="false"
     if (not width?) or width == 0 or (not height?) or height==0
       width = DefaultWidth
       height = DefaultHeight
@@ -43,7 +60,7 @@ class TBPublisher
     position = getPosition(@domId)
     TBUpdateObjects()
     OT.getHelper().eventing(@)
-    Cordova.exec(TBSuccess, TBError, OTPlugin, "initPublisher", [name, position.top, position.left, width, height, zIndex, publishAudio, publishVideo, cameraName, ratios.widthRatio, ratios.heightRatio] )
+    Cordova.exec(TBSuccess, TBError, OTPlugin, "initPublisher", [name, position.top, position.left, width, height, zIndex, publishAudio, publishVideo, cameraName, ratios.widthRatio, ratios.heightRatio, audioFallbackEnabled, audioBitrate, audioSource, videoSource, frameRate, resolution] )
     Cordova.exec(@eventReceived, TBSuccess, OTPlugin, "addEvent", ["publisherEvents"] )
   setSession: (session) =>
     @session = session

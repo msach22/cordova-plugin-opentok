@@ -62,9 +62,20 @@
 // Called by TB.initPublisher()
 - (void)initPublisher:(CDVInvokedUrlCommand *)command{
     NSLog(@"iOS creating Publisher");
-    BOOL bpubAudio = YES;
-    BOOL bpubVideo = YES;
-    
+    /* properties: [name, position.top, position.left, width, height, zIndex, 
+        publishAudio, publishVideo, cameraName, ratios.widthRatio, ratios.heightRatio, 
+        audioFallbackEnabled, audioBitrate, audioSource, videoSource, frameRate, cameraResolution]
+    */
+    // initialize publisher settings
+    OTPublisherSettings * _publisherSettings = [[OTPublisherSettings alloc] init];
+    BOOL bpubAudio;
+    BOOL bpubVideo;
+    BOOL baudioFallbackEnabled;
+    BOOL bpubAudioTrack;
+    BOOL bpubVideoTrack;
+    enum OTCameraCaptureFrameRate finalCameraFrameRate;
+    enum OTCameraCaptureResolution finalCameraResolution;
+
     // Get Parameters
     NSString* name = [command.arguments objectAtIndex:0];
     int top = [[command.arguments objectAtIndex:1] intValue];
@@ -72,26 +83,57 @@
     int width = [[command.arguments objectAtIndex:3] intValue];
     int height = [[command.arguments objectAtIndex:4] intValue];
     int zIndex = [[command.arguments objectAtIndex:5] intValue];
-    
+    int audioBitrate = [[command.arguments objectAtIndex:12] intValue];
+    int cameraFrameRate = [[command.arguments objectAtIndex: 15] intValue]; 
     NSString* publishAudio = [command.arguments objectAtIndex:6];
-    if ([publishAudio isEqualToString:@"false"]) {
-        bpubAudio = NO;
-    }
     NSString* publishVideo = [command.arguments objectAtIndex:7];
-    if ([publishVideo isEqualToString:@"false"]) {
-        bpubVideo = NO;
-    }
+    NSString* cameraPosition = [command.arguments objectAtIndex:8];
+    NSString* audioFallbackEnabled = [command.arguments objectAtIndex: 11];
+    NSString* audioTrack = [command.arguments objectAtIndex: 13];
+    NSString* videoTrack = [command.arguments objectAtIndex: 14];
+    NSString* cameraResolution = [command.arguments objectAtIndex: 16];
     
+    // Sanitize publisher properties
+    if ([cameraResolution isEqualToString:@"1280x720"]) {
+      finalCameraResolution = OTCameraCaptureResolutionHigh;
+    }else if ([cameraResolution isEqualToString:@"352x288"]) {
+      finalCameraResolution = OTCameraCaptureResolutionLow;
+    } else {
+      finalCameraResolution = OTCameraCaptureResolutionMedium;
+    }
+    if (cameraFrameRate == 15) {
+      finalCameraFrameRate = OTCameraCaptureFrameRate15FPS;
+    } else if (cameraFrameRate == 7) {
+      finalCameraFrameRate = OTCameraCaptureFrameRate7FPS;
+    } else if (cameraFrameRate == 1) {
+      finalCameraFrameRate = OTCameraCaptureFrameRate1FPS;
+    } else {
+      finalCameraFrameRate = OTCameraCaptureFrameRate30FPS;
+    }
+
+    bpubAudio = [publishAudio isEqualToString:@"false"] ? NO : YES;
+    bpubVideo = [publishVideo isEqualToString:@"false"] ? NO : YES;
+    baudioFallbackEnabled = [audioFallbackEnabled isEqualToString:@"false"] ? NO : YES;
+    bpubAudioTrack = [audioTrack isEqualToString:@"false"] ? NO : YES;
+    bpubVideoTrack = [videoTrack isEqualToString:@"false"] ? NO : YES;
+
+    _publisherSettings.name = name;
+    _publisherSettings.audioBitrate = audioBitrate;
+    _publisherSettings.audioTrack = bpubAudioTrack;
+    _publisherSettings.videoTrack = bpubVideoTrack;
+    _publisherSettings.cameraResolution = finalCameraResolution;
+    _publisherSettings.cameraFrameRate = finalCameraFrameRate;
+       
     // Publish and set View
-    _publisher = [[OTPublisher alloc] initWithDelegate:self name:name];
+    _publisher = [[OTPublisher alloc] initWithDelegate:self settings:_publisherSettings];
     [_publisher setPublishAudio:bpubAudio];
     [_publisher setPublishVideo:bpubVideo];
+    [_publisher setAudioFallbackEnabled:baudioFallbackEnabled];
     [self.webView.scrollView addSubview:_publisher.view];
     [_publisher.view setFrame:CGRectMake(left, top, width, height)];
     if (zIndex>0) {
         _publisher.view.layer.zPosition = zIndex;
     }
-    NSString* cameraPosition = [command.arguments objectAtIndex:8];
     if ([cameraPosition isEqualToString:@"back"]) {
         _publisher.cameraPosition = AVCaptureDevicePositionBack;
     }

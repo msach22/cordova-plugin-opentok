@@ -281,7 +281,7 @@ TBPublisher = (function() {
     this.streamCreated = __bind(this.streamCreated, this);
     this.eventReceived = __bind(this.eventReceived, this);
     this.setSession = __bind(this.setSession, this);
-    var cameraName, height, name, position, publishAudio, publishVideo, ratios, width, zIndex, _ref, _ref1, _ref2, _ref3;
+    var audioBitrate, audioFallbackEnabled, audioSource, cameraName, frameRate, height, name, position, publishAudio, publishVideo, ratios, resolution, videoSource, width, zIndex, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
     this.sanitizeInputs(one, two, three);
     pdebug("creating publisher", {});
     position = getPosition(this.domId);
@@ -291,16 +291,37 @@ TBPublisher = (function() {
     cameraName = "front";
     zIndex = TBGetZIndex(document.getElementById(this.domId));
     ratios = TBGetScreenRatios();
+    audioFallbackEnabled = "true";
+    audioBitrate = 40000;
+    audioSource = "true";
+    videoSource = "true";
+    frameRate = 30;
+    resolution = "640X480";
     if (this.properties != null) {
       width = (_ref = this.properties.width) != null ? _ref : position.width;
       height = (_ref1 = this.properties.height) != null ? _ref1 : position.height;
       name = (_ref2 = this.properties.name) != null ? _ref2 : "";
       cameraName = (_ref3 = this.properties.cameraName) != null ? _ref3 : "front";
+      audioFallbackEnabled = (_ref4 = this.properties.audioFallbackEnabled) != null ? _ref4 : audioFallbackEnabled;
+      audioBitrate = (_ref5 = this.properties.audioBitrate) != null ? _ref5 : audioBitrate;
+      audioSource = (_ref6 = this.properties.audioSource) != null ? _ref6 : audioSource;
+      videoSource = (_ref7 = this.properties.videoSource) != null ? _ref7 : videoSource;
+      frameRate = (_ref8 = this.properties.frameRate) != null ? _ref8 : frameRate;
+      resolution = (_ref9 = this.properties.resolution) != null ? _ref9 : resolution;
       if ((this.properties.publishAudio != null) && this.properties.publishAudio === false) {
         publishAudio = "false";
       }
       if ((this.properties.publishVideo != null) && this.properties.publishVideo === false) {
         publishVideo = "false";
+      }
+      if ((this.properties.audioFallbackEnabled != null) && this.properties.audioFallbackEnabled === false) {
+        audioFallbackEnabled = "false";
+      }
+      if ((this.properties.audioSource != null) || this.properties.audioSource === false) {
+        audioSource = "false";
+      }
+      if ((this.properties.videoSource != null) || this.properties.videoSource === false) {
+        videoSource = "false";
       }
     }
     if ((width == null) || width === 0 || (height == null) || height === 0) {
@@ -315,7 +336,7 @@ TBPublisher = (function() {
     position = getPosition(this.domId);
     TBUpdateObjects();
     OT.getHelper().eventing(this);
-    Cordova.exec(TBSuccess, TBError, OTPlugin, "initPublisher", [name, position.top, position.left, width, height, zIndex, publishAudio, publishVideo, cameraName, ratios.widthRatio, ratios.heightRatio]);
+    Cordova.exec(TBSuccess, TBError, OTPlugin, "initPublisher", [name, position.top, position.left, width, height, zIndex, publishAudio, publishVideo, cameraName, ratios.widthRatio, ratios.heightRatio, audioFallbackEnabled, audioBitrate, audioSource, videoSource, frameRate, resolution]);
     Cordova.exec(this.eventReceived, TBSuccess, OTPlugin, "addEvent", ["publisherEvents"]);
   }
 
@@ -601,7 +622,7 @@ TBSession = (function() {
     element = streamElements[elementId];
     if (element) {
       element.parentNode.removeChild(element);
-      delete streamElements[elementId];
+      delete streamElements[streamId];
       TBUpdateObjects();
     }
     return Cordova.exec(TBSuccess, TBError, OTPlugin, "unsubscribe", [subscriber.streamId]);
@@ -848,6 +869,8 @@ TBSubscriber = (function() {
   function TBSubscriber(stream, divName, properties) {
     var divPosition, element, height, name, obj, position, ratios, subscribeToAudio, subscribeToVideo, width, zIndex, _ref;
     element = document.getElementById(divName);
+    this.id = divName;
+    this.element = element;
     pdebug("creating subscriber", properties);
     this.streamId = stream.streamId;
     if ((properties != null) && properties.width === "100%" && properties.height === "100%") {

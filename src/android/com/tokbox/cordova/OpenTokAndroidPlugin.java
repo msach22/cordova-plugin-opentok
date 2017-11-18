@@ -136,7 +136,10 @@ public class OpenTokAndroidPlugin extends CordovaPlugin implements
 
   public class RunnablePublisher extends RunnableUpdateViews implements 
     PublisherKit.PublisherListener, Publisher.CameraListener{
-    //  property contains: [name, position.top, position.left, width, height, zIndex, publishAudio, publishVideo, cameraName] )
+     /* properties: [name, position.top, position.left, width, height, zIndex, 
+        publishAudio, publishVideo, cameraName, ratios.widthRatio, ratios.heightRatio, 
+        audioFallbackEnabled, audioBitrate, audioSource, videoSource, frameRate, cameraResolution]
+    */
     public Publisher mPublisher;
 
     public RunnablePublisher( JSONArray args ){
@@ -171,32 +174,52 @@ public class OpenTokAndroidPlugin extends CordovaPlugin implements
       Log.i(TAG, "view running on UIVIEW!!!");
       if( mPublisher == null ){
         ViewGroup frame = (ViewGroup) cordova.getActivity().findViewById(android.R.id.content);
-        String publisherName;
+        boolean audioFallbackEnabled = true;
+        boolean videoTrack = true;
+        boolean audioTrack = true;
+        boolean publishAudio = true;
+        boolean publishVideo = true;
+        int audioBitrate = 40000;
+        String publisherName = "Android-Cordova-Publisher";
+        String frameRate = "FPS_30";
+        String resolution = "MEDIUM"; 
         try{
           publisherName = this.mProperty.getString(0);
+          audioBitrate = this.mProperty.getInt(12);
+          frameRate = "FPS_" + this.mProperty.getString(15);    
+          videoTrack = this.mProperty.getString(14) == "true";
+          audioTrack = this.mProperty.getString(13) == "true";
+          audioFallbackEnabled = this.mProperty.getString(11) == "true";
+          publishVideo = this.mProperty.getString(7) == "true";
+          publishAudio = this.mProperty.getString(6) == "true";
+          if (compareStrings(this.mProperty.getString(16), "1280x720")) {
+            resolution = "HIGH";
+          }
+          if (compareStrings(this.mProperty.getString(16), "352x288")) {
+            resolution = "LOW";
+          }
+          Log.i(TAG, "publisher properties sanitized");          
         }catch(Exception e){
-          publisherName = "Android-Publisher";
+          Log.i(TAG, "Unable to set publisher properties");
         }
-
-        mPublisher = new Publisher(cordova.getActivity().getApplicationContext(), publisherName);
+        mPublisher = new Publisher.Builder(cordova.getActivity().getApplicationContext())
+          .videoTrack(videoTrack)
+          .audioTrack(audioTrack)
+          .name(publisherName)
+          .audioBitrate(audioBitrate)
+          .frameRate(Publisher.CameraCaptureFrameRate.valueOf(frameRate))
+          .resolution(Publisher.CameraCaptureResolution.valueOf(resolution))
+          .build();
         mPublisher.setCameraListener(this);
         mPublisher.setPublisherListener(this);
         mPublisher.setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE, BaseVideoRenderer.STYLE_VIDEO_FILL);
-        try{
-          // Camera is swapped in streamCreated event
-          if( compareStrings(this.mProperty.getString(7), "false") ){
-            mPublisher.setPublishVideo(false); // default is true
-          }
-          if( compareStrings(this.mProperty.getString(6), "false") ){
-            mPublisher.setPublishAudio(false); // default is true
-          }
-          Log.i(TAG, "all set up for publisher");
-        }catch( Exception e ){
-          Log.i(TAG, "error when trying to retrieve publish audio/video property");
-        }
+        mPublisher.setAudioFallbackEnabled(audioFallbackEnabled);
+        mPublisher.setPublishAudio(publishVideo);
+        mPublisher.setPublishAudio(publishAudio);
         this.mView = mPublisher.getView();
         frame.addView( this.mView );
         mSession.publish(mPublisher);
+        Log.i(TAG, "publishing");        
       }
       super.run();
     }
