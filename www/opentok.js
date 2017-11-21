@@ -2,8 +2,8 @@ window.OT = {
   checkSystemRequirements: function() {
     return 1;
   },
-  initPublisher: function(one, two, three) {
-    return new TBPublisher(one, two, three);
+  initPublisher: function(one, two) {
+    return new TBPublisher(one, two);
   },
   initSession: function(apiKey, sessionId) {
     if (sessionId == null) {

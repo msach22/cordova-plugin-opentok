@@ -13,8 +13,8 @@
 window.OT =
   checkSystemRequirements: ->
     return 1
-  initPublisher: (one, two, three) ->
-    return new TBPublisher( one, two, three )
+  initPublisher: (one, two) ->
+    return new TBPublisher( one, two )
   initSession: (apiKey, sessionId ) ->
     if( not sessionId? ) then @showError( "OT.initSession takes 2 parameters, your API Key and Session ID" )
     return new TBSession(apiKey, sessionId)
