@@ -31,21 +31,36 @@ TB.addEventListener('exception', function(e){
 ```
 
 <a name="initPublisher"></a>
-### OT.initPublisher apiKey:String, [replaceElementId:String], [properties:Object]):Publisher
+### OT.initPublisher [replaceElementId:String], [properties:Object]):Publisher
 
 Initializes and returns a Publisher object. You can use this Publisher object to test the microphone and camera attached to the Publisher, and then pass this Publisher object to Session.publish() to publish a stream to a session.
 
-You can only create one publisher object. Calling TB.initPublisher() more than once will fail silently.
+You can only create one publisher object. Calling `OT.initPublisher()` more than once will fail silently.
 
 #### Parameters
 
-* **apikey** (String) — The API key that TokBox provided you when you registered for the OpenTok API.
 
 * **replaceElementId** (String) - Optional. The id attribute of the existing DOM element that the Publisher video replaces. If you do not specify a replaceElementId, the application appends a new DOM element to the HTML body. 
 
 * **properties** (Object) — Optional. This is an optional object that contains the following properties (each of which are optional):
 
+  * **audioBitrate** (Number) — The desired bitrate for the published audio, in bits per second. The supported range of values is 6,000 - 510,000. (Invalid values are ignored.) Set this value to enable high-quality audio (or to reduce bandwidth usage with lower-quality audio).
+  The following are recommended settings:
+
+    * **8,000 - 12,000 for narrowband (NB) speech**
+    * **16,000 - 20,000 for wideband (WB) speech**
+    * **28,000 - 40,000 for full-band (FB) speech**
+    * **48,000 - 64,000 for full-band (FB) music**
+    
+    * **The default value is 40,000.**
+
+  * **audioFallbackEnabled** (Boolean) — Whether to turn on audio fallback or not.
+
+  * **audioSource** (Boolean) — If this property is set to false, the audio subsystem will not be initialized for the publisher, and setting the publishAudio property will have no effect. If your application does not require the use of audio, it is recommended to set this property rather than use the publishAudio property, which only temporarily disables the audio track.
+
   * **cameraName** (String) - The preferred camera position. When setting this property, if the change is possible, the publisher will use the camera with the specified position. Valid Inputs: 'Front' or 'Back'
+  
+  * **frameRate** (Number) - The desired frame rate, in frames per second, of the video. Valid values are 30, 15, 7, and 1. The published stream will use the closest value supported on the publishing client. The frame rate can differ slightly from the value you set, depending on the device of the client. And the video will only use the desired frame rate if the client configuration supports it. 
 
   * **height** (Number) — The desired height, in pixels, of the displayed Publisher video stream (default: 198). 
 
@@ -57,6 +72,10 @@ You can only create one publisher object. Calling TB.initPublisher() more than o
 
   * **publishVideo** (Boolean) — Whether to publish video.
 
+  * **resolution** (String) - The desired resolution of the video. The format of the string is "widthxheight", where the width and height are represented in pixels. Valid values are "1280x720", "640x480", and "320x240". The published video will only use the desired resolution if the client configuration supports it. Some devices and clients do not support each of these resolution settings.
+
+  * **videoSource** (Boolean) — If this property is set to false, the video subsystem will not be initialized for the publisher, and setting the publishVideo property will have no effect. If your application does not require the use of video, it is recommended to set this property rather than use the publishVideo property, which only temporarily disables the video track.
+
 
 #### Returns
 
@@ -65,7 +84,7 @@ You can only create one publisher object. Calling TB.initPublisher() more than o
 
 Example Code:  
 ```
-var publisher = OT.initPublisher('1127', 'myPublisherDiv', {name:"HelloWorld"} );
+var publisher = OT.initPublisher('myPublisherDiv', {name:"HelloWorld", audioSource: false } );
 ```
 
 <a name="initSession"></a>
