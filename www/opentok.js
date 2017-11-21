@@ -275,14 +275,14 @@ var TBPublisher,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 TBPublisher = (function() {
-  function TBPublisher(one, two, three) {
+  function TBPublisher(one, two) {
     this.removePublisherElement = __bind(this.removePublisherElement, this);
     this.streamDestroyed = __bind(this.streamDestroyed, this);
     this.streamCreated = __bind(this.streamCreated, this);
     this.eventReceived = __bind(this.eventReceived, this);
     this.setSession = __bind(this.setSession, this);
     var audioBitrate, audioFallbackEnabled, audioSource, cameraName, frameRate, height, name, position, publishAudio, publishVideo, ratios, resolution, videoSource, width, zIndex, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
-    this.sanitizeInputs(one, two, three);
+    this.sanitizeInputs(one, two);
     pdebug("creating publisher", {});
     position = getPosition(this.domId);
     name = "";
@@ -430,32 +430,18 @@ TBPublisher = (function() {
     return Cordova.exec(TBSuccess, TBError, OTPlugin, media, [publishState]);
   };
 
-  TBPublisher.prototype.sanitizeInputs = function(one, two, three) {
+  TBPublisher.prototype.sanitizeInputs = function(one, two) {
     var position;
-    if ((three != null)) {
-      this.apiKey = one;
-      this.domId = two;
-      this.properties = three;
-    } else if ((two != null)) {
-      if (typeof two === "object") {
-        this.properties = two;
-        if (document.getElementById(one)) {
-          this.domId = one;
-        } else {
-          this.apiKey = one;
-        }
-      } else {
-        this.apiKey = one;
-        this.domId = two;
-      }
+    if ((two != null)) {
+      this.domId = one;
+      this.properties = two;
     } else if ((one != null)) {
       if (typeof one === "object") {
         this.properties = one;
-      } else if (document.getElementById(one)) {
+      } else {
         this.domId = one;
       }
     }
-    this.apiKey = this.apiKey != null ? this.apiKey : "";
     this.properties = this.properties && typeof (this.properties === "object") ? this.properties : {};
     if (this.domId && document.getElementById(this.domId)) {
       if (!this.properties.width || !this.properties.height) {
@@ -470,8 +456,7 @@ TBPublisher = (function() {
     } else {
       this.domId = TBGenerateDomHelper();
     }
-    this.domId = this.domId && document.getElementById(this.domId) ? this.domId : TBGenerateDomHelper();
-    return this.apiKey = this.apiKey.toString();
+    return this;
   };
 
   return TBPublisher;

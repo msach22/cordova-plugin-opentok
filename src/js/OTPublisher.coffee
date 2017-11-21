@@ -15,8 +15,8 @@
 #     setStyle( style, value ) : publisher - not yet implemented
 #
 class TBPublisher
-  constructor: (one, two, three) ->
-    @sanitizeInputs( one,two, three )
+  constructor: (one, two) ->
+    @sanitizeInputs(one, two)
     pdebug "creating publisher", {}
     position = getPosition(@domId)
     name=""
@@ -113,33 +113,17 @@ class TBPublisher
       publishState = "false"
     pdebug "setting publishstate", {media: media, publishState: publishState}
     Cordova.exec(TBSuccess, TBError, OTPlugin, media, [publishState] )
-  sanitizeInputs: (one, two, three) ->
-    if( three? )
-      # all 3 required properties present: apiKey, domId, properties
-      # Check if dom exists
-      @apiKey = one
-      @domId = two
-      @properties = three
-    else if( two? )
-      # only 2 properties are present, possible inputs: apiKey, domId || apiKey, properties || domId, properties
-      if( typeof(two) == "object" )
-        # second input is property, so first input is either apiKey or domId
-        @properties = two
-        if document.getElementById(one)
-          @domId = one
-        else
-          @apiKey = one
-      else
-        # no property object is passed in
-        @apiKey = one
-        @domId = two
+  sanitizeInputs: (one, two) ->
+    if( two? )
+      # all 2 optional properties present: domId, properties
+      @domId = one
+      @properties = two
     else if( one? )
-      # only 1 property is present, apiKey || domId || properties
+      # only 1 property is present domId || properties
       if( typeof(one) == "object" )
         @properties = one
-      else if document.getElementById(one)
+      else
         @domId = one
-    @apiKey = if @apiKey? then @apiKey else ""
     @properties = if( @properties and typeof( @properties == "object" )) then @properties else {}
     # if domId exists but properties width or height is not specified, set properties
     if( @domId and document.getElementById( @domId ) )
@@ -152,5 +136,4 @@ class TBPublisher
           @properties.height = position.height
     else
       @domId = TBGenerateDomHelper()
-    @domId = if( @domId and document.getElementById( @domId ) ) then @domId else TBGenerateDomHelper()
-    @apiKey = @apiKey.toString()
+    return @
