@@ -1,6 +1,6 @@
 {
   "name": "Cordova-Plugin-OpenTok",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-coffee": "^0.10.1",
