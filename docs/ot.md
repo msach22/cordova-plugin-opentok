@@ -1,31 +1,31 @@
-# TB Object
+# OT Object
 
-TB Object lets you initialize the OpenTok API and set up exception event handling.
+The OT Object lets you initialize the OpenTok API and set up exception event handling.
 
 ## Methods
 
-[TB.addEventListener()](#addEventListener)  
-[TB.initPublisher()](#initPublisher)  
-[TB.initSession()](#initSession)  
-[TB.removeEventListener()](#removeEventListener)  
+[OT.addEventListener()](#addEventListener)  
+[OT.initPublisher()](#initPublisher)  
+[OT.initSession()](#initSession)  
+[OT.removeEventListener()](#removeEventListener)  
 
 
 
 <a name="addEventListener"></a>
-### TB.addEventListener(type:String, listener:Function)
+### OT.addEventListener(type:String, listener:Function)
 
-Registers a method as an event listener for a specific event. The TB class dispatches exception events, defined by the
+Registers a method as an event listener for a specific event. The OT class dispatches exception events, defined by the
 [ExceptionEvent](exceptionEvent.md) object.
 
 #### Parameters
 
-* **type** (String) — This string identifying the type of event. The TB object can only dispatch one type of event: an exception event. The only type of event the TB object dispatches is an 'exception' event.
+* **type** (String) — This string identifying the type of event. The OT object can only dispatch one type of event: an exception event. The only type of event the OT object dispatches is an 'exception' event.
 
-* **listener** (Function) — The function to be invoked when the TB object dispatches the event. An [ExceptionEvent](exceptionEvent.md) object is passed into this function.
+* **listener** (Function) — The function to be invoked when the OT object dispatches the event. An [ExceptionEvent](exceptionEvent.md) object is passed into this function.
 
 Example Code:  
 ```
-TB.addEventListener('exception', function(e){
+OT.addEventListener('exception', function(e){
   console.log(e.message);
 });
 ```
@@ -108,18 +108,18 @@ var session = OT.initSession('1127', '1_mx...' )
 
 
 <a name="removeEventListener"></a>
-### TB.removeEventListener(type:String, listener:Function)  
+### OT.removeEventListener(type:String, listener:Function)  
 
 Removes an event listener for a specific event  
 
 #### Parameters
 
-* **type** (String) — This string identifying the type of event. The TB object can only dispatch one type of event: an exception event. The only type of event the TB object dispatches is an 'exception' event.
+* **type** (String) — This string identifying the type of event. The OT object can only dispatch one type of event: an exception event. The only type of event the OT object dispatches is an 'exception' event.
 
 * **listener** (Function) — The event listener function to remove.  
-The TB object throws an exception if the listener name is invalid.  
+The OT object throws an exception if the listener name is invalid.  
 
 Example Code:  
 ```
-TB.removeEventListener('exception', eventHandlerFunction);
+OT.removeEventListener('exception', eventHandlerFunction);
 ```
