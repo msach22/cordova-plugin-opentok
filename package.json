@@ -13,6 +13,7 @@
   "dependencies": {
     "@opentok/client": "2.15.5",
     "exec": "^0.2.0",
+    "q": "^1.5.1",
     "tar": "^2.0.0"
   },
   "devDependencies": {
