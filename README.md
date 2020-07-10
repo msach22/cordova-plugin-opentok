@@ -1,4 +1,4 @@
-# Cordova Plugin for OpenTok iOS and Android
+# Cordova Plugin for OpenTok iOS and Android (ziomarco)
 
 <img src="https://assets.tokbox.com/img/vonage/Vonage_VideoAPI_black.svg" height="48px" alt="Tokbox is now known as Vonage" />
 
