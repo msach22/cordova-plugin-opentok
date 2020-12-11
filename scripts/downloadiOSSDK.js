@@ -16,7 +16,7 @@ module.exports = function (context) {
                     var frameworkDir = context.opts.plugin.dir + '/src/ios/';
                     exec('mv ./OpenTok-iOS/OpenTok.framework ' + frameworkDir, function (err, out, code) {
                         console.log('moved OpenTok.framework into ' + frameworkDir);
-                        exec('rm -r ./OpenTok-iOS', function (err, out, code) {
+                        exec('rm -rf ./OpenTok-iOS', function (err, out, code) {
                             console.log('Removed extracted dir');
                             exec('rm ./' + IosSDKVersion + '.tar.bz2', function (err, out, code) {
                                 console.log('Removed downloaded SDK');
