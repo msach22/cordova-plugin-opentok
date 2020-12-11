@@ -1,5 +1,5 @@
 {
-  "name": "cordova-plugin-opentok",
+  "name": "cordova-plugin-opentok-medicoamicomod",
   "version": "3.4.3",
   "description": "Add live video streaming to your Cordova Application",
   "cordova": {
@@ -11,7 +11,7 @@
     ]
   },
   "dependencies": {
-    "@opentok/client": "2.15.5",
+    "@opentok/client": "^2.18.3",
     "exec": "^0.2.0",
     "q": "^1.5.1",
     "tar": "^2.0.0"
@@ -27,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/opentok/cordova-plugin-opentok.git"
+    "url": "git+https://github.com/ziomarco/cordova-plugin-opentok.git"
   },
   "keywords": [
     "opentok",
@@ -37,10 +37,6 @@
     "cordova-ios",
     "cordova-browser"
   ],
-  "author": "Manik Sachdeva",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/opentok/cordova-plugin-opentok/issues"
-  },
-  "homepage": "https://github.com/opentok/cordova-plugin-opentok#readme"
+  "author": "Marco Palmisano",
+  "license": "UNLICENSED"
 }
